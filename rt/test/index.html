@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <!-- Site made with Mobirise Website Builder v4.8.5, https://mobirise.com -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Mobirise v4.8.5, mobirise.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <link rel="shortcut icon" href="assets/images/mbr-122x84.jpg" type="image/x-icon">
+  <meta name="description" content="A simple video chat app powered by webRTC.">
+  <title>VidApp - Simple Video Chat - WebRTC</title>
+  <link rel="stylesheet" href="assets/web/assets/mobirise-icons/mobirise-icons.css">
+  <link rel="stylesheet" href="assets/tether/tether.min.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-reboot.min.css">
+  <link rel="stylesheet" href="assets/socicon/css/styles.css">
+  <link rel="stylesheet" href="assets/dropdown/css/style.css">
+  <link rel="stylesheet" href="assets/theme/css/style.css">
+  <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
+  
+  
+  
+</head>
+<body>
+  <section class="menu cid-r6lQYd9CFq" once="menu" id="menu2-0">
+
+    
+
+    <nav class="navbar navbar-expand beta-menu navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+        <div class="menu-logo">
+            <div class="navbar-brand">
+                <span class="navbar-logo">
+                    <a href="https://vidapp.000webhostapp.com">
+                        <img src="assets/images/mbr-122x84.jpg" alt="Mobirise" title="" style="height: 3.8rem;">
+                    </a>
+                </span>
+                
+            </div>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true"><li class="nav-item">
+                    <a class="nav-link link text-warning display-4" href="https://vidapp.000webhostapp.com">VIDAPP</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link link text-warning display-4" href="https://vidapp.000webhostapp.com"></a>
+                </li></ul>
+            <div class="navbar-buttons mbr-section-btn"><a class="btn btn-sm btn-warning display-4" href="https://webrtc.org"><span class="mbri-browse mbr-iconfont mbr-iconfont-btn" style="color: rgb(255, 255, 255);"></span>
+                    
+                    WebRTC</a></div>
+        </div>
+    </nav>
+</section>
+
+<section class="engine"><a href="https://mobirise.info/o">portfolio website templates</a></section><section class="cid-r6lR31NP4i" id="social-buttons1-2">
+    
+    
+
+    
+
+    <div class="container">
+        <div class="media-container-row">
+            <div class="col-md-8 align-center">
+                <h2 class="pb-3 mbr-section-title mbr-fonts-style display-2">
+                    <br><br>
+					        <h1 id="title">Simple Video Chat</h1>
+							<p>To start a video chat, create a unique ID & share it with the person you want to chat with.</p>
+        <style>
+			.input {
+				border-radius: 20px;
+				border: 32px;
+				border-color: black;
+				color: black;
+				padding: 4px 15px;
+				text-align: left;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+				margin: .8rem .4rem;
+			}
+			.button {
+				background-color: #879a9f;
+				border: none;
+				color: white;
+				padding: 5px 25px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+				margin: 8px 2px;
+				border-radius: 20px;
+			}
+            .videoContainer {
+                position: relative;
+                width: 200px;
+                height: 150px;
+				
+            }
+            .videoContainer video {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+            }
+            .volume_bar {
+                position: absolute;
+                width: 20px;
+                height: 0px;
+                right: 0px;
+				left: 150%;
+                bottom: 0px;
+                background-color: #12acef;
+            }
+        </style>
+        
+        <p id="subTitle"></p>
+        <form id="createRoom">
+            <input class="input" placeholder="Type your ID here!" id="sessionInput"/>
+            <button class="button" type="submit">Create ID!</button>
+        </form>
+		<br></br>
+        <div class="videoContainer">
+            <video id="localVideo" style="height: 150px;" oncontextmenu="return false;"></video>
+            <div id="localVolume" class="volume_bar"></div>
+        </div>
+		<br></br>
+        <div id="remotes"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <script src="../out/simplewebrtc-with-adapter.bundle.js"></script>
+        <script>
+            // grab the room from the URL
+            var room = location.search && location.search.split('?')[1];
+
+            // create our webrtc connection
+            var webrtc = new SimpleWebRTC({
+                // the id/element dom element that will hold "our" video
+                localVideoEl: 'localVideo',
+                // the id/element dom element that will hold remote videos
+                remoteVideosEl: '',
+                // immediately ask for camera access
+                autoRequestMedia: true,
+                debug: false,
+                detectSpeakingEvents: true
+            });
+
+            // when it's ready, join if we got a room from the URL
+            webrtc.on('readyToCall', function () {
+                // you can name it anything
+                if (room) webrtc.joinRoom(room);
+            });
+
+            function showVolume(el, volume) {
+                if (!el) return;
+                if (volume < -45) { // vary between -45 and -20
+                    el.style.height = '0px';
+                } else if (volume > -20) {
+                    el.style.height = '100%';
+                } else {
+                    el.style.height = '' + Math.floor((volume + 100) * 100 / 25 - 220) + '%';
+                }
+            }
+            webrtc.on('channelMessage', function (peer, label, data) {
+                if (data.type == 'volume') {
+                    showVolume(document.getElementById('volume_' + peer.id), data.volume);
+                }
+            });
+            webrtc.on('videoAdded', function (video, peer) {
+                console.log('video added', peer);
+                var remotes = document.getElementById('remotes');
+                if (remotes) {
+                    var d = document.createElement('div');
+                    d.className = 'videoContainer';
+                    d.id = 'container_' + webrtc.getDomId(peer);
+                    d.appendChild(video);
+                    var vol = document.createElement('div');
+                    vol.id = 'volume_' + peer.id;
+                    vol.className = 'volume_bar';
+                    video.onclick = function () {
+                        video.style.width = video.videoWidth + 'px';
+                        video.style.height = video.videoHeight + 'px';
+                    };
+                    d.appendChild(vol);
+                    remotes.appendChild(d);
+                }
+            });
+            webrtc.on('videoRemoved', function (video, peer) {
+                console.log('video removed ', peer);
+                var remotes = document.getElementById('remotes');
+                var el = document.getElementById('container_' + webrtc.getDomId(peer));
+                if (remotes && el) {
+                    remotes.removeChild(el);
+                }
+            });
+            webrtc.on('volumeChange', function (volume, treshold) {
+                //console.log('own volume', volume);
+                showVolume(document.getElementById('localVolume'), volume);
+            });
+
+            // Since we use this twice we put it here
+            function setRoom(name) {
+                $('form').remove();
+                $('h1').text(name);
+                $('#subTitle').text('Link to join: ' + location.href);
+                $('body').addClass('active');
+            }
+
+            if (room) {
+                setRoom(room);
+            } else {
+                $('form').submit(function () {
+                    var val = $('#sessionInput').val().toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, '');
+                    webrtc.createRoom(val, function (err, name) {
+                        console.log(' create room cb', arguments);
+
+                        var newUrl = location.pathname + '?' + name;
+                        if (!err) {
+                            history.replaceState({foo: 'bar'}, null, newUrl);
+                            setRoom(name);
+                        } else {
+                            console.log(err);
+                        }
+                    });
+                    return false;
+                });
+            }
+
+            var button = $('#screenShareButton'),
+                setButton = function (bool) {
+                    button.text(bool ? 'share screen' : 'stop sharing');
+                };
+            webrtc.on('localScreenStopped', function () {
+                setButton(true);
+            });
+
+            setButton(true);
+
+            button.click(function () {
+                if (webrtc.getLocalScreen()) {
+                    webrtc.stopScreenShare();
+                    setButton(true);
+                } else {
+                    webrtc.shareScreen(function (err) {
+                        if (err) {
+                            setButton(true);
+                        } else {
+                            setButton(false);
+                        }
+                    });
+
+                }
+            });
+        </script>
+					<br><br>SHARE THIS PAGE!
+                </h2>
+                <div>
+                    <div class="mbr-social-likes" data-counters="false">
+                        <span class="btn btn-social facebook mx-2" title="Share link on Facebook">
+                            <i class="socicon socicon-facebook"></i>
+                        </span>
+                        <span class="btn btn-social twitter mx-2" title="Share link on Twitter">
+                            <i class="socicon socicon-twitter"></i>
+                        </span>
+                        <span class="btn btn-social plusone mx-2" title="Share link on Google+">
+                            <i class="socicon socicon-googleplus"></i>
+                        </span>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cid-r6lR0MOhty" id="footer5-1">
+
+    
+
+    
+
+    <div class="container">
+        <div class="media-container-row">
+            <div class="col-md-3">
+                <div class="media-wrap">
+                    <a href="https://vidapp.000webhostapp.com">
+                       <img src="assets/images/mbr-192x133.jpg" alt="Mobirise" title="">
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <p class="mbr-text align-right links mbr-fonts-style display-7"><a href="https://webrtc.org">WebRTC</a> is a completely free project. 
+<br>It provides simple APIs for real-time communication
+<br>for browsers &amp; mobile apps. &nbsp;<br></p>
+            </div>
+        </div>
+        <div class="footer-lower">
+            <div class="media-container-row">
+                <div class="col-md-12">
+                    <hr>
+                </div>
+            </div>
+            <div class="media-container-row mbr-white">
+                <div class="col-md-6 copyright">
+                    <p class="mbr-text mbr-fonts-style display-7">
+                        This website is under a creative commons license. VidApp - 2019.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="social-list align-right">
+                        <div class="soc-item">
+                            <a href="https://twitter.com/" target="_blank">
+                                <span class="mbr-iconfont mbr-iconfont-social socicon-twitter socicon"></span>
+                            </a>
+                        </div>
+                        <div class="soc-item">
+                            <a href="https://www.facebook.com/" target="_blank">
+                                <span class="mbr-iconfont mbr-iconfont-social socicon-facebook socicon"></span>
+                            </a>
+                        </div>
+                        <div class="soc-item">
+                            <a href="https://www.youtube.com/" target="_blank">
+                                <span class="mbr-iconfont mbr-iconfont-social socicon-youtube socicon"></span>
+                            </a>
+                        </div>
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+  <script src="assets/web/assets/jquery/jquery.min.js"></script>
+  <script src="assets/popper/popper.min.js"></script>
+  <script src="assets/tether/tether.min.js"></script>
+  <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+  <script src="assets/sociallikes/social-likes.js"></script>
+  <script src="assets/dropdown/js/script.min.js"></script>
+  <script src="assets/touchswipe/jquery.touch-swipe.min.js"></script>
+  <script src="assets/smoothscroll/smooth-scroll.js"></script>
+  <script src="assets/theme/js/script.js"></script>
+  
+  
+</body>
+</html>
